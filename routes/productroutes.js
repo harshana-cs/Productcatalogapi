@@ -5,7 +5,8 @@ const {
   getallProducts,
   getProductbyId,
   updateProduct,
-  deleteProduct
+  deleteProduct,
+  getProductbyCategory
 } = require('../controllers/productcontrollers');
 
 async function productRoutes(fastify, options) {
@@ -14,6 +15,7 @@ async function productRoutes(fastify, options) {
   fastify.get('/products/:id', getProductbyId);
   fastify.put('/products/:id', updateProduct);
   fastify.delete('/products/:id', deleteProduct);
+  fastify.get('/products/category/:category', getProductbyCategory);
 }
 
 module.exports = productRoutes;
