@@ -10,4 +10,25 @@ async function createProduct(req, res) {
     res.status(500).send({ error: 'Failed to create product' });
   }
 }
-module.exports={createProduct};
+async function getallProducts(req, res) {
+  try {
+    const products = await Product.find();
+    res.send(products);
+  } catch (error) {
+    req.log.error(error);
+    res.status(500).send({ error: 'Failed to retrieve products' });
+  }
+}
+async function getProductbyId(req, res) {
+  try {
+    const product = await Product.findById(req.params.id);
+    if (!product) {
+      return res.status(404).send({ error: 'Product not found' });
+    }
+    res.send(product);
+  } catch (error) {
+    req.log.error(error);
+    res.status(500).send({ error: 'Failed to retrieve product' });
+  }
+}
+module.exports={createProduct,getallProducts,getProductbyId};
