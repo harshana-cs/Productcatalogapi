@@ -43,5 +43,16 @@ async function updateProduct(req, res) {
     res.status(500).send({ error: 'Failed to update product' });
   }
 }
-
-module.exports={createProduct,getallProducts,getProductbyId,updateProduct};
+async function deleteProduct(req,res){
+    try{
+        const product= await Product.findByIdAndDelete(req.params.id);
+        if(!product){
+            return res.status(404).send({ error: 'Product not found' });
+        }
+        res.send({ message: 'Product deleted successfully' });
+    } catch (error) {
+        req.log.error(error);
+        res.status(500).send({ error: 'Failed to delete product' });
+    }
+}
+module.exports={createProduct,getallProducts,getProductbyId,updateProduct,deleteProduct};
