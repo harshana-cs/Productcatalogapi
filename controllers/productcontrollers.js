@@ -56,4 +56,16 @@ async function deleteProduct(req, reply) {
     reply.code(500).send({ error: 'Failed to delete product' });
   }
 }
-module.exports={createProduct,getallProducts,getProductbyId,updateProduct,deleteProduct};
+async function getProductbyCategory(req, reply) {
+  try {
+    const products = await Product.find({ category: req.params.category });
+    if (products.length === 0) {
+      return reply.code(404).send({ error: 'No products found in this category' });
+    }
+    reply.send(products);
+  } catch (error) {
+    req.log.error(error);
+    reply.code(500).send({ error: 'Failed to retrieve products by category' });
+  }
+}
+module.exports={createProduct,getallProducts,getProductbyId,updateProduct,deleteProduct,getProductbyCategory};
