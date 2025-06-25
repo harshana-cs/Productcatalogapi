@@ -31,4 +31,17 @@ async function getProductbyId(req, res) {
     res.status(500).send({ error: 'Failed to retrieve product' });
   }
 }
-module.exports={createProduct,getallProducts,getProductbyId};
+async function updateProduct(req, res) {
+  try { 
+    const product = await Product.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
+    if (!product) {     
+        return res.status(404).send({ error: 'Product not found' });
+        }
+    res.send(product);
+  } catch (error) {
+    req.log.error(error);
+    res.status(500).send({ error: 'Failed to update product' });
+  }
+}
+
+module.exports={createProduct,getallProducts,getProductbyId,updateProduct};
