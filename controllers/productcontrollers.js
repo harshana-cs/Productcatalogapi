@@ -1,58 +1,58 @@
 const fastify = require('fastify')({ logger: true });
-const Product = require('../models/productmodel');
-async function createProduct(req, res) {
+const Product = require('../models/product');
+async function createProduct(req, reply) {
   try {
     const product = new Product(req.body);
     await product.save();
-    reply.status(201).send(product);
+    reply.code(201).send(product);
   } catch (error) {
-    req.log.error(error);
-    res.status(500).send({ error: 'Failed to create product' });
+    console.error('❌ Error creating product:', error.message); // 👈 show actual error
+    reply.code(500).send({ error: error.message }); // 👈 return the actual error
   }
 }
-async function getallProducts(req, res) {
+async function getallProducts(req, reply) {
   try {
     const products = await Product.find();
-    res.send(products);
+    reply.send(products);
   } catch (error) {
     req.log.error(error);
-    res.status(500).send({ error: 'Failed to retrieve products' });
+    reply.status(500).send({ error: 'Failed to retrieve products' });
   }
 }
-async function getProductbyId(req, res) {
+async function getProductbyId(req, reply) {
   try {
     const product = await Product.findById(req.params.id);
     if (!product) {
-      return res.status(404).send({ error: 'Product not found' });
+      return reply.status(404).send({ error: 'Product not found' });
     }
-    res.send(product);
+    reply.send(product);
   } catch (error) {
     req.log.error(error);
-    res.status(500).send({ error: 'Failed to retrieve product' });
+    reply.status(500).send({ error: 'Failed to retrieve product' });
   }
 }
-async function updateProduct(req, res) {
-  try { 
+async function updateProduct(req, reply) {
+  try {
     const product = await Product.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
-    if (!product) {     
-        return res.status(404).send({ error: 'Product not found' });
-        }
-    res.send(product);
+    if (!product) {
+      return reply.status(404).send({ error: 'Product not found' });
+    }
+    reply.send(product);
   } catch (error) {
     req.log.error(error);
-    res.status(500).send({ error: 'Failed to update product' });
+    reply.status(500).send({ error: 'Failed to update product' });
   }
 }
-async function deleteProduct(req,res){
-    try{
-        const product= await Product.findByIdAndDelete(req.params.id);
-        if(!product){
-            return res.status(404).send({ error: 'Product not found' });
-        }
-        res.send({ message: 'Product deleted successfully' });
-    } catch (error) {
-        req.log.error(error);
-        res.status(500).send({ error: 'Failed to delete product' });
+async function deleteProduct(req, reply) {
+  try {
+    const product = await Product.findByIdAndDelete(req.params.id);
+    if (!product) {
+      return reply.status(404).send({ error: 'Product not found' });
     }
+    reply.send({ message: 'Product deleted successfully' });
+  } catch (error) {
+    req.log.error(error);
+    reply.status(500).send({ error: 'Failed to delete product' });
+  }
 }
 module.exports={createProduct,getallProducts,getProductbyId,updateProduct,deleteProduct};

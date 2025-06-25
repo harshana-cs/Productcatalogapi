@@ -1,11 +1,19 @@
 const fastify = require('fastify')({ logger: true });
-const Product = require('../models/productmodel');
-const { createProduct,getProductbyId,getallProducts,updateProduct,deleteProduct } = require('../controllers/productcontrollers');
-const router = fastify;
-router.post('/products', createProduct);
-router.get('/products', getallProducts);
-router.get('/products/:id', getProductbyId);
-router.put('/products/:id', updateProduct);
-router.delete('/products/:id', deleteProduct);
+// const Product = require('./models/product');
+const {
+  createProduct,
+  getallProducts,
+  getProductbyId,
+  updateProduct,
+  deleteProduct
+} = require('../controllers/productcontrollers');
 
-module.exports = router;
+async function productRoutes(fastify, options) {
+  fastify.post('/products', createProduct);
+  fastify.get('/products', getallProducts);
+  fastify.get('/products/:id', getProductbyId);
+  fastify.put('/products/:id', updateProduct);
+  fastify.delete('/products/:id', deleteProduct);
+}
+
+module.exports = productRoutes;
