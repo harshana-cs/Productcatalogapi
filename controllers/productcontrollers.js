@@ -68,4 +68,17 @@ async function getProductbyCategory(req, reply) {
     reply.code(500).send({ error: 'Failed to retrieve products by category' });
   }
 }
-module.exports={createProduct,getallProducts,getProductbyId,updateProduct,deleteProduct,getProductbyCategory};
+
+async function filterproductsbycategoriesandprice(req,reply){
+  try{
+    const products =await Products.find({category: req.params.category, price: req.params.price});
+  if(products.lengthength==0){
+    return reply.code(404).send({error:'No products found'});
+  }
+  reply.send(products);
+  } catch (error) {
+    req.log.error(error);
+    reply.code(500).send({ error: 'Failed to filter products' });
+  }
+}
+module.exports={createProduct,getallProducts,getProductbyId,updateProduct,deleteProduct,getProductbyCategory,filterproductsbycategoriesandprice};
