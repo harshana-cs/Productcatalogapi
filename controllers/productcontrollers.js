@@ -81,5 +81,30 @@ async function filterproductsbycategoriesandprice(req,reply){
     reply.code(500).send({ error: 'Failed to filter products' });
   }
 }
+async function filterproductbycategoriesanstock(req,reply){
+  try{
+    const products = await Product.find({ category: req.params.category, stock: req.params.stock });
 
-module.exports={createProduct,getallProducts,getProductbyId,updateProduct,deleteProduct,getProductbyCategory,filterproductsbycategoriesandprice};
+    if(products.length==0){
+      return reply.code(404).send({error:'No products found'});
+    }
+    reply.send(products);
+  } catch (error) {
+    req.log.error(error);
+    reply.code(500).send({ error: 'Failed to filter products' });
+  }
+}
+async function filterproductbyname(req,reply){
+  try{
+    const products=Product.find({ name: { $regex: req.params.name, $options: 'i' } });
+    if(products.length==0){ 
+      return reply.code(404).send({ error: 'No products found with this name' });
+    } 
+    reply.send(products);
+
+  }catch (error) {
+    req.log.error(error);
+    reply.code(500).send({ error: 'Failed to filter products by name' });
+  }
+}
+module.exports={createProduct,getallProducts,getProductbyId,updateProduct,deleteProduct,getProductbyCategory,filterproductsbycategoriesandprice,filterproductbycategoriesanstock,filterproductbyname};
