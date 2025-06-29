@@ -1,6 +1,9 @@
 function Heading(){
     return(
-        <h1>Product Catalog</h1>
+       <div className="page-container">
+  <h1 className="page-heading">Product Catalog</h1>
+</div>
 
     )
 }
+export default Heading;
